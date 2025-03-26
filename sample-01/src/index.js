@@ -23,7 +23,7 @@ const providerConfig = {
   clientId: config.clientId,
   onRedirectCallback,
   authorizationParams: {
-    redirect_uri: "http://localhost:8000",  // Cambiar la URL de redirección aquí
+    redirect_uri: "http://localhost:3000",  
     ...(config.audience ? { audience: config.audience } : null),
   },
 };

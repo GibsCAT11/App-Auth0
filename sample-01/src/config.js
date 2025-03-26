@@ -1,20 +1,25 @@
 import configJson from "./auth_config.json";
 
 export function getConfig() {
-  // Configure the audience here. By default, it will take whatever is in the config
-  // (specified by the `audience` key) unless it's the default value of "{yourApiIdentifier}" (which
-  // is what you get sometimes by using the Auth0 sample download tool from the quickstart page, if you
-  // don't have an API).
-  // If this resolves to `null`, the API page changes to show some helpful info about what to do
-  // with the audience.
-  const audience =
-    configJson.audience && configJson.audience !== "{yourApiIdentifier}"
-      ? configJson.audience
-      : null;
-
+  // Validación mejorada del audience
+  const audience = validateAudience(configJson.audience);
+  
   return {
     domain: configJson.domain,
     clientId: configJson.clientId,
-    ...(audience ? { audience } : null),
+    audience, // Siempre incluido (puede ser null)
+    apiOrigin: configJson.apiOrigin || "http://localhost:3001", // Añadido para el API
+    redirectUri: configJson.redirectUri || window.location.origin // Para redirecciones
   };
+}
+
+function validateAudience(audience) {
+  if (!audience || audience === "{yourApiIdentifier}") {
+    console.warn(
+      "⚠️ Audience no configurado. Asegúrate de definir un valor válido en auth_config.json.\n" +
+      "Guía: https://auth0.com/docs/get-started/apis"
+    );
+    return null;
+  }
+  return audience;
 }
